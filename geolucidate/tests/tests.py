@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from coordinates import parse
+from geolucidate.functions import cleanup
+from geolucidate.parser import parser_re
 
 def test_parser():
     values = [
@@ -44,6 +45,6 @@ def test_parser():
         yield check_parser, coord_string, result
 
 def check_parser(coord_string, result):
-    print parse(coord_string)
-    print result
-    assert parse(coord_string) == result
+    match = parser_re.search(coord_string)
+    assert match
+    assert cleanup(match.groupdict()) == result
