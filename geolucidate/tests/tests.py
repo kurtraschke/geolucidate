@@ -3,6 +3,7 @@
 from geolucidate.functions import cleanup
 from geolucidate.parser import parser_re
 
+
 def test_parser():
     values = [
         ("N424400 W800557", ['N','42','44','00','W','80','05','57']),
@@ -29,7 +30,7 @@ def test_parser():
         ("462716N/0721147W", ['N','46','27','16','W','072','11','47']),
         ("491500N 1230720W", ['N','49','15','00','W','123','07','20']),
         ("490600N 1163000W", ['N','49','06','00','W','116','30','00']),
-        ("490103N 1235145W", ['N','49','01','03','W','123','51','45'])
+        ("490103N 1235145W", ['N','49','01','03','W','123','51','45']),
         #Possibly missing something; 7º W isn't anywhere near Canada.
         #("5617N/0721W", ['N','56','17','00','W','07','21','00']),
         #Latitude and longitude reversed.
@@ -43,6 +44,7 @@ def test_parser():
     for test in values:
         (coord_string, result) = test
         yield check_parser, coord_string, result
+
 
 def check_parser(coord_string, result):
     match = parser_re.search(coord_string)

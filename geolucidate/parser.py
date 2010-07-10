@@ -4,7 +4,7 @@ import re
 
 parser_re = re.compile(u"""
     # Latitude direction, first position: one of N, S, NORTH, SOUTH
-    (?P<latdir>NORTH|SOUTH|[NS])?                    
+    (?P<latdir>NORTH|SOUTH|[NS])?
     # Latitude degrees: two digits 0-90
     (?P<latdeg>([0-8][0-9])|90)
     # Optional space or degree mark separating degrees and minutes
@@ -30,8 +30,8 @@ parser_re = re.compile(u"""
     (?P<longdeg>\\d{2,3}?)
     # If there was a degree mark before, look for another one here
     (\ |(?(degmark)(º|\ DEGREES,\ )))?
-    (?(latminsec) #Only look for minutes and seconds in the longitude if they were there in the latitude
-    (?P<longminsec>
+    (?(latminsec)   #Only look for minutes and seconds in the longitude
+    (?P<longminsec> #if they were there in the latitude
     # Longitude minutes: two digits
     (?P<longmin>[0-5][0-9])
     # If there was a degree mark before, look for punctuation after the minutes
@@ -43,4 +43,4 @@ parser_re = re.compile(u"""
     ))
     #Longitude direction, second position: optionally preceded by a space
     ((?(longdir)|\ ?(?P<longdir2>(EAST|WEST|[EW]))))
-    """,re.VERBOSE|re.UNICODE|re.IGNORECASE)
+    """, re.VERBOSE | re.UNICODE | re.IGNORECASE)
