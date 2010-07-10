@@ -24,9 +24,9 @@ def cleanup(parts):
     latdir = latdir[0]
     longdir = longdir[0]
 
-    latdeg = parts.get('latdeg','00')
+    latdeg = parts.get('latdeg')
+    longdeg = parts.get('longdeg')
 
-    longdeg = parts.get('longdeg','00')
 
     latmin = parts.get('latmin','00') or '00'
     longmin = parts.get('longmin','00') or '00'
