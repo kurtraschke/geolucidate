@@ -5,6 +5,19 @@ from decimal import Decimal, getcontext
 from parser import parser_re
 
 def cleanup(parts):
+    """
+    >>> cleanup({'latdir': 'south', 'longdir': 'west',
+    ...          'latdeg':'60','latmin':'30',
+    ...          'longdeg':'50','longmin':'40'})
+    ['S', '60', '30', '00', 'W', '50', '40', '00']
+
+    >>> cleanup({'latdir': 'south', 'longdir': 'west',
+    ...          'latdeg':'60','latmin':'30', 'latdecsec':'.50',
+    ...          'longdeg':'50','longmin':'40','longdecsec':'.90'})
+    ['S', '60', '30.50', '00', 'W', '50', '40.90', '00']
+
+    """
+    
     latdir = (parts['latdir'] or parts['latdir2']).upper()
     longdir = (parts['longdir'] or parts['longdir2']).upper()
 
@@ -34,8 +47,8 @@ def cleanup(parts):
 
 def convert(latdir, latdeg, latmin, latsec, longdir, longdeg, longmin, longsec):
     """
-    >>> convert('N','50','30','30','W','50','30','30')
-    (Decimal('50.50833333'), Decimal('-50.50833333'))
+    >>> convert('S','50','30','30','W','50','30','30')
+    (Decimal('-50.50833333'), Decimal('-50.50833333'))
 
     """
     getcontext().prec=10
