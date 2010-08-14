@@ -76,14 +76,15 @@ def convert(latdir, latdeg, latmin, latsec,
 
 def link(url, text):
     return """<a href="{0}">{1}</a>""".format(url, text)
+def coord_str(latitude, longitude, separator):
+    return str(latitude.quantize(Decimal('0.000001'))) + \
+           separator + str(longitude.quantize(Decimal('0.000001')))
 
 
 def google_maps_link(type="m"):
     def func(original_string, latitude, longitude):
-        coord_str = str(latitude.quantize(Decimal('0.000001'))) + \
-                    "," + str(longitude.quantize(Decimal('0.000001')))
         return link("http://maps.google.com/maps?q={0}&ll={0}&t={1}".format(
-            coord_str,
+            coord_str(latitude, longitude, ","),
             type),
                     original_string)
     return func
@@ -91,10 +92,8 @@ def google_maps_link(type="m"):
 
 def bing_maps_link(style='r'):
     def func(original_string, latitude, longitude):
-        coord_str = str(latitude.quantize(Decimal('0.000001'))) + \
-                    "~" + str(longitude.quantize(Decimal('0.000001')))
         return link("http://bing.com/maps/default.aspx?v=2&cp={0}&style={1}&sp=Point.{3}_{4}_{2}".format(
-            coord_str,
+            coord_str(latitude, longitude, "~"),
             style,
             original_string,
             str(latitude.quantize(Decimal('0.000001'))),
