@@ -74,8 +74,20 @@ def convert(latdir, latdeg, latmin, latsec,
     return (latitude, longitude)
 
 
-def link(url, text):
-    return """<a href="{0}">{1}</a>""".format(url, text)
+def link(url, text, title=''):
+    """
+    >>> link("http://www.google.com", "Google")
+    '<a href="http://www.google.com">Google</a>'
+
+    >>> link("http://www.google.com", "Google", "Google")
+    '<a href="http://www.google.com" title="Google">Google</a>'
+
+    """
+    if title is not '':
+        title = ' title="{0}"'.format(title)
+    return """<a href="{0}"{2}>{1}</a>""".format(url, text, title)
+
+
 def coord_str(latitude, longitude, separator):
     return str(latitude.quantize(Decimal('0.000001'))) + \
            separator + str(longitude.quantize(Decimal('0.000001')))
@@ -86,7 +98,7 @@ def google_maps_link(type="m"):
         return link("http://maps.google.com/maps?q={0}&ll={0}&t={1}".format(
             coord_str(latitude, longitude, ","),
             type),
-                    original_string)
+                original_string, coord_str(latitude, longitude, ", "))
     return func
 
 
@@ -98,20 +110,20 @@ def bing_maps_link(style='r'):
             original_string,
             str(latitude.quantize(Decimal('0.000001'))),
             str(longitude.quantize(Decimal('0.000001')))),
-                    original_string)
+                    original_string, coord_str(latitude, longitude, ", "))
     return func
 
 
 def replace(string, sub_function=google_maps_link()):
     """
     >>> replace("58147N/07720W")
-    '<a href="http://maps.google.com/maps?q=58.235278,-77.333333&ll=58.235278,-77.333333&t=m">58147N/07720W</a>'
+    '<a href="http://maps.google.com/maps?q=58.235278,-77.333333&ll=58.235278,-77.333333&t=m" title="58.235278, -77.333333">58147N/07720W</a>'
 
     >>> replace("58147N/07720W", google_maps_link('k'))
-    '<a href="http://maps.google.com/maps?q=58.235278,-77.333333&ll=58.235278,-77.333333&t=k">58147N/07720W</a>'
+    '<a href="http://maps.google.com/maps?q=58.235278,-77.333333&ll=58.235278,-77.333333&t=k" title="58.235278, -77.333333">58147N/07720W</a>'
 
     >>> replace("58147N/07720W", bing_maps_link('a'))
-    '<a href="http://bing.com/maps/default.aspx?v=2&cp=58.235278~-77.333333&style=a&sp=Point.58.235278_-77.333333_58147N/07720W">58147N/07720W</a>'
+    '<a href="http://bing.com/maps/default.aspx?v=2&cp=58.235278~-77.333333&style=a&sp=Point.58.235278_-77.333333_58147N/07720W" title="58.235278, -77.333333">58147N/07720W</a>'
 
 
     """
