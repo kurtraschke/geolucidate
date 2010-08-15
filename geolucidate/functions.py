@@ -2,6 +2,7 @@
 
 import re
 from decimal import Decimal, getcontext
+from urllib import urlencode
 from parser import parser_re
 
 
@@ -74,12 +75,12 @@ def convert(latdir, latdeg, latmin, latsec,
     return (latitude, longitude)
 
 
-def link(url, text, title=''):
+def default_link(url, text, title=''):
     """
-    >>> link("http://www.google.com", "Google")
+    >>> default_link("http://www.google.com", "Google")
     '<a href="http://www.google.com">Google</a>'
 
-    >>> link("http://www.google.com", "Google", "Google")
+    >>> default_link("http://www.google.com", "Google", "Google")
     '<a href="http://www.google.com" title="Google">Google</a>'
 
     """
@@ -88,49 +89,93 @@ def link(url, text, title=''):
     return """<a href="{0}"{2}>{1}</a>""".format(url, text, title)
 
 
-def coord_str(latitude, longitude, separator):
-    return str(latitude.quantize(Decimal('0.000001'))) + \
-           separator + str(longitude.quantize(Decimal('0.000001')))
+class MapLink(object):
+
+    PRECISION = Decimal('0.000001')
+
+    def __init__(self, original_string, latitude, longitude):
+        self.original_string = original_string
+        self.latitude = latitude
+        self.longitude = longitude
+        self.lat_str = str(self.latitude.quantize(self.PRECISION))
+        self.long_str = str(self.longitude.quantize(self.PRECISION))
+
+    def coordinates(self, separator):
+        return self.lat_str + separator + self.long_str
+
+    def make_link(self, baseurl, params, link_generator):
+        return link_generator(baseurl + urlencode(params.items()),
+                              self.original_string,
+                              self.coordinates(", "))
 
 
-def google_maps_link(type="m"):
-    def func(original_string, latitude, longitude):
-        return link("http://maps.google.com/maps?q={0}&ll={0}&t={1}".format(
-            coord_str(latitude, longitude, ","),
-            type),
-                original_string, coord_str(latitude, longitude, ", "))
+def google_maps_link(type='hybrid'):
+    types = {'map': 'm', 'satellite': 'k', 'hybrid': 'h'}
+
+    def func(maplink, link=default_link):
+        baseurl = "http://maps.google.com/maps?"
+        coordinates = maplink.coordinates(',')
+        params = {'q': "{0} ({1})".format(coordinates,
+                                          maplink.original_string),
+                  'll': coordinates,
+                  't': types[type]}
+        return maplink.make_link(baseurl, params, link)
     return func
 
 
-def bing_maps_link(style='r'):
-    def func(original_string, latitude, longitude):
-        return link("http://bing.com/maps/default.aspx?v=2&cp={0}&style={1}&sp=Point.{3}_{4}_{2}".format(
-            coord_str(latitude, longitude, "~"),
-            style,
-            original_string,
-            str(latitude.quantize(Decimal('0.000001'))),
-            str(longitude.quantize(Decimal('0.000001')))),
-                    original_string, coord_str(latitude, longitude, ", "))
+def bing_maps_link(type='hybrid'):
+    types = {'map': 'r', 'satellite': 'a', 'hybrid': 'h'}
+
+    def func(maplink, link=default_link):
+        baseurl = "http://bing.com/maps/default.aspx?"
+        params = {'v': '2',
+                  'cp': maplink.coordinates("~"),
+                  'style':  types[type],
+                  'sp': "Point.{1}_{2}_{0}".format(maplink.original_string,
+                                                   maplink.lat_str,
+                                                   maplink.long_str)}
+        return maplink.make_link(baseurl, params, link)
     return func
 
 
 def replace(string, sub_function=google_maps_link()):
     """
     >>> replace("58147N/07720W")
-    '<a href="http://maps.google.com/maps?q=58.235278,-77.333333&ll=58.235278,-77.333333&t=m" title="58.235278, -77.333333">58147N/07720W</a>'
+    '<a href="http://maps.google.com/maps?q=58.235278%2C-77.333333+%2858147N%2F07720W%29&ll=58.235278%2C-77.333333&t=h" title="58.235278, -77.333333">58147N/07720W</a>'
 
-    >>> replace("58147N/07720W", google_maps_link('k'))
-    '<a href="http://maps.google.com/maps?q=58.235278,-77.333333&ll=58.235278,-77.333333&t=k" title="58.235278, -77.333333">58147N/07720W</a>'
+    >>> replace("58147N/07720W", google_maps_link('satellite'))
+    '<a href="http://maps.google.com/maps?q=58.235278%2C-77.333333+%2858147N%2F07720W%29&ll=58.235278%2C-77.333333&t=k" title="58.235278, -77.333333">58147N/07720W</a>'
 
-    >>> replace("58147N/07720W", bing_maps_link('a'))
-    '<a href="http://bing.com/maps/default.aspx?v=2&cp=58.235278~-77.333333&style=a&sp=Point.58.235278_-77.333333_58147N/07720W" title="58.235278, -77.333333">58147N/07720W</a>'
-
+    >>> replace("58147N/07720W", bing_maps_link('map'))
+    '<a href="http://bing.com/maps/default.aspx?style=r&cp=58.235278%7E-77.333333&sp=Point.58.235278_-77.333333_58147N%2F07720W&v=2" title="58.235278, -77.333333">58147N/07720W</a>'
 
     """
 
     def do_replace(match):
         original_string = match.group()
         (latitude, longitude) = convert(*cleanup(match.groupdict()))
-        return sub_function(original_string, latitude, longitude)
+        return sub_function(MapLink(original_string, latitude, longitude))
 
     return parser_re.sub(do_replace, string)
+
+
+def get_replacements(string, link_function=default_link,
+                     sub_function=google_maps_link()):
+    """
+    >>> get_replacements("4630 NORTH 5705 WEST 58147N/07720W")
+    ... #doctest: +ELLIPSIS
+    {<_sre.SRE_Match object at ...>: '<a href="..." title="...">4630 NORTH 5705 WEST</a>', <_sre.SRE_Match object at ...>: '<a href="..." title="...">58147N/07720W</a>'}
+
+    """
+
+    substitutions = {}
+
+    matches = parser_re.finditer(string)
+
+    for match in matches:
+        (latitude, longitude) = convert(*cleanup(match.groupdict()))
+        substitutions[match] = sub_function(MapLink(match.group(),
+                                                    latitude, longitude),
+                                            link_function)
+
+    return substitutions
