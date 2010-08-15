@@ -74,6 +74,10 @@ def convert(latdir, latdeg, latmin, latsec,
 
 def default_link(url, text, title=''):
     """
+    The default link generating function, for generating HTML links as
+    strings. To generate links as Genshi elements, lxml elements, etc.,
+    supply an alternative link function which takes the same parameters.
+
     >>> default_link("http://www.google.com", "Google")
     '<a href="http://www.google.com">Google</a>'
 
@@ -107,6 +111,10 @@ class MapLink(object):
 
 
 def google_maps_link(type='hybrid'):
+    """
+    Returns a function for generating links to Google Maps.
+
+    """
     types = {'map': 'm', 'satellite': 'k', 'hybrid': 'h'}
 
     def func(maplink, link=default_link):
@@ -121,6 +129,10 @@ def google_maps_link(type='hybrid'):
 
 
 def bing_maps_link(type='hybrid'):
+    """
+    Returns a function for generating links to Bing Maps.
+
+    """
     types = {'map': 'r', 'satellite': 'a', 'hybrid': 'h'}
 
     def func(maplink, link=default_link):
@@ -137,6 +149,9 @@ def bing_maps_link(type='hybrid'):
 
 def replace(string, sub_function=google_maps_link()):
     """
+    Replace detected coordinates with a map link, using the given substitution
+    function.
+
     >>> replace("58147N/07720W")
     '<a href="http://maps.google.com/maps?q=58.235278%2C-77.333333+%2858147N%2F07720W%29&ll=58.235278%2C-77.333333&t=h" title="58.235278, -77.333333">58147N/07720W</a>'
 
@@ -159,6 +174,12 @@ def replace(string, sub_function=google_maps_link()):
 def get_replacements(string, link_function=default_link,
                      sub_function=google_maps_link()):
     """
+    Return a dict whose keys are MatchObjects and whose values are
+    the corresponding replacements.  Use get_replacements() when the
+    replacement cannot be performed through ordinary string substitution
+    by re.sub, as in replace().
+
+
     >>> get_replacements("4630 NORTH 5705 WEST 58147N/07720W")
     ... #doctest: +ELLIPSIS
     {<_sre.SRE_Match object at ...>: '<a href="..." title="...">4630 NORTH 5705 WEST</a>', <_sre.SRE_Match object at ...>: '<a href="..." title="...">58147N/07720W</a>'}
@@ -166,7 +187,6 @@ def get_replacements(string, link_function=default_link,
     """
 
     substitutions = {}
-
     matches = parser_re.finditer(string)
 
     for match in matches:
