@@ -25,7 +25,7 @@ parser_re = re.compile(u"""
     # Latitude/longitude delimiter: space, forward slash, comma, or none
     (\ ?[ /]\ ?|,\ )?
     # Longitude direction, first position: one of N, S, NORTH, SOUTH
-    (?P<longdir>EAST|WEST|[EW])?
+    (?(latdir)(?P<longdir>EAST|WEST|[EW]))
     # Longitude degrees: two or three digits
     (?P<longdeg>\\d{2,3}?)
     # If there was a degree mark before, look for another one here
@@ -42,5 +42,5 @@ parser_re = re.compile(u"""
     (?P<longdecsec>\\.\\d{1,2}))?
     ))
     #Longitude direction, second position: optionally preceded by a space
-    ((?(longdir)|\ ?(?P<longdir2>(EAST|WEST|[EW]))))
+    (?(latdir)|\ ?(?P<longdir2>(EAST|WEST|[EW])))
     """, re.VERBOSE | re.UNICODE | re.IGNORECASE)
