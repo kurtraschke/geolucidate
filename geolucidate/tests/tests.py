@@ -50,3 +50,13 @@ def check_parser(coord_string, result):
     match = parser_re.search(coord_string)
     assert match
     assert cleanup(match.groupdict()) == result
+
+
+def test_false_positive():
+    values = ["GGN7383 was"]
+    for test in values:
+        yield check_false_positive, test
+
+def check_false_positive(test):
+    match = parser_re.search(test)
+    assert match is None
