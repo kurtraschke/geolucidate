@@ -19,11 +19,8 @@ def cleanup(parts):
 
     """
 
-    latdir = (parts['latdir'] or parts['latdir2']).upper()
-    longdir = (parts['longdir'] or parts['longdir2']).upper()
-
-    latdir = latdir[0]
-    longdir = longdir[0]
+    latdir = (parts['latdir'] or parts['latdir2']).upper()[0]
+    longdir = (parts['longdir'] or parts['longdir2']).upper()[0]
 
     latdeg = parts.get('latdeg')
     longdeg = parts.get('longdeg')
