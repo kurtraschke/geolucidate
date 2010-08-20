@@ -3,6 +3,7 @@
 from geolucidate.functions import cleanup
 from geolucidate.parser import parser_re
 
+from nose.tools import eq_
 
 def test_parser():
     values = [
@@ -49,7 +50,7 @@ def test_parser():
 def check_parser(coord_string, result):
     match = parser_re.search(coord_string)
     assert match
-    assert cleanup(match.groupdict()) == result
+    eq_(cleanup(match.groupdict()), result)
 
 
 def test_false_positive():
@@ -59,4 +60,4 @@ def test_false_positive():
 
 def check_false_positive(test):
     match = parser_re.search(test)
-    assert match is None
+    eq_(match, None)
