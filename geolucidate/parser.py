@@ -2,7 +2,7 @@
 
 import re
 
-parser_re = re.compile(u"""
+parser_re = re.compile(u"""\\b
     # Latitude direction, first position: one of N, S, NORTH, SOUTH
     (?P<latdir>NORTH|SOUTH|[NS])?
     # Latitude degrees: two digits 0-90

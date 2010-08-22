@@ -54,7 +54,7 @@ def check_parser(coord_string, result):
 
 
 def test_false_positive():
-    values = ["GGN7383 was"]
+    values = ["GGN7383 was", "6830N 70W"]
     for test in values:
         yield check_false_positive, test
 
