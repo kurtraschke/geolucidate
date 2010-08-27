@@ -8,7 +8,7 @@ parser_re = re.compile(u"""\\b
     # Latitude degrees: two digits 0-90
     (?P<latdeg>([0-8][0-9])|90)
     # Optional space or degree mark separating degrees and minutes
-    (\ |(?P<degmark>º|\ DEGREES,\ ))?
+    (\ |(?P<degmark>\ ?(º|°)\ ?|\ DEGREES,\ ))?
     (?P<latminsec>
     # Latitude minutes: two digits 0-59
     (?P<latmin>[0-5][0-9])
@@ -29,7 +29,7 @@ parser_re = re.compile(u"""\\b
     # Longitude degrees: two or three digits
     (?P<longdeg>\\d{2,3}?)
     # If there was a degree mark before, look for another one here
-    (\ |(?(degmark)(º|\ DEGREES,\ )))?
+    (\ |(?(degmark)(\ ?(º|°)\ ?|\ DEGREES,\ )))?
     (?(latminsec)   #Only look for minutes and seconds in the longitude
     (?P<longminsec> #if they were there in the latitude
     # Longitude minutes: two digits
