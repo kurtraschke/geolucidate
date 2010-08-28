@@ -79,10 +79,10 @@ def default_link(url, text, title=''):
     supply an alternative link function which takes the same parameters.
 
     >>> default_link("http://www.google.com", "Google")
-    '<a href="http://www.google.com">Google</a>'
+    u'<a href="http://www.google.com">Google</a>'
 
     >>> default_link("http://www.google.com", "Google", "Google")
-    '<a href="http://www.google.com" title="Google">Google</a>'
+    u'<a href="http://www.google.com" title="Google">Google</a>'
 
     """
     if title is not '':
@@ -121,7 +121,7 @@ def google_maps_link(type='hybrid'):
         baseurl = "http://maps.google.com/maps?"
         coordinates = maplink.coordinates(',')
         params = {'q': u"{0} ({1})".format(coordinates,
-                                           maplink.original_string).encode("utf-8"),
+                                           maplink.original_string).encode('utf-8'),
                   'll': coordinates,
                   't': types[type]}
         return maplink.make_link(baseurl, params, link)
@@ -154,13 +154,13 @@ def replace(string, sub_function=google_maps_link()):
     function.
 
     >>> replace("58147N/07720W")
-    '<a href="http://maps.google.com/maps?q=58.235278%2C-77.333333+%2858147N%2F07720W%29&ll=58.235278%2C-77.333333&t=h" title="58.235278, -77.333333">58147N/07720W</a>'
+    u'<a href="http://maps.google.com/maps?q=58.235278%2C-77.333333+%2858147N%2F07720W%29&ll=58.235278%2C-77.333333&t=h" title="58.235278, -77.333333">58147N/07720W</a>'
 
     >>> replace("58147N/07720W", google_maps_link('satellite'))
-    '<a href="http://maps.google.com/maps?q=58.235278%2C-77.333333+%2858147N%2F07720W%29&ll=58.235278%2C-77.333333&t=k" title="58.235278, -77.333333">58147N/07720W</a>'
+    u'<a href="http://maps.google.com/maps?q=58.235278%2C-77.333333+%2858147N%2F07720W%29&ll=58.235278%2C-77.333333&t=k" title="58.235278, -77.333333">58147N/07720W</a>'
 
     >>> replace("58147N/07720W", bing_maps_link('map'))
-    '<a href="http://bing.com/maps/default.aspx?style=r&cp=58.235278%7E-77.333333&sp=Point.58.235278_-77.333333_58147N%2F07720W&v=2" title="58.235278, -77.333333">58147N/07720W</a>'
+    u'<a href="http://bing.com/maps/default.aspx?style=r&cp=58.235278%7E-77.333333&sp=Point.58.235278_-77.333333_58147N%2F07720W&v=2" title="58.235278, -77.333333">58147N/07720W</a>'
 
     """
 
@@ -183,7 +183,7 @@ def get_replacements(string, link_function=default_link,
 
     >>> get_replacements("4630 NORTH 5705 WEST 58147N/07720W")
     ... #doctest: +ELLIPSIS
-    {<_sre.SRE_Match object at ...>: '<a href="..." title="...">4630 NORTH 5705 WEST</a>', <_sre.SRE_Match object at ...>: '<a href="..." title="...">58147N/07720W</a>'}
+    {<_sre.SRE_Match object at ...>: u'<a href="..." title="...">4630 NORTH 5705 WEST</a>', <_sre.SRE_Match object at ...>: u'<a href="..." title="...">58147N/07720W</a>'}
 
     """
 
