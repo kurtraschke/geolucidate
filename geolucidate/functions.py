@@ -86,8 +86,8 @@ def default_link(url, text, title=''):
 
     """
     if title is not '':
-        title = ' title="{0}"'.format(title)
-    return """<a href="{0}"{2}>{1}</a>""".format(url, text, title)
+        title = u' title="{0}"'.format(title)
+    return u"""<a href="{0}"{2}>{1}</a>""".format(url, text, title)
 
 
 class MapLink(object):
@@ -120,8 +120,8 @@ def google_maps_link(type='hybrid'):
     def func(maplink, link=default_link):
         baseurl = "http://maps.google.com/maps?"
         coordinates = maplink.coordinates(',')
-        params = {'q': "{0} ({1})".format(coordinates,
-                                          maplink.original_string),
+        params = {'q': u"{0} ({1})".format(coordinates,
+                                           maplink.original_string).encode("utf-8"),
                   'll': coordinates,
                   't': types[type]}
         return maplink.make_link(baseurl, params, link)
@@ -140,9 +140,10 @@ def bing_maps_link(type='hybrid'):
         params = {'v': '2',
                   'cp': maplink.coordinates("~"),
                   'style':  types[type],
-                  'sp': "Point.{1}_{2}_{0}".format(maplink.original_string,
-                                                   maplink.lat_str,
-                                                   maplink.long_str)}
+                  'sp': u"Point.{1}_{2}_{0}".format(maplink.original_string,
+                                                    maplink.lat_str,
+                                                    maplink.long_str).encode('utf-8')
+                  }
         return maplink.make_link(baseurl, params, link)
     return func
 
