@@ -3,7 +3,7 @@
 import re
 from decimal import Decimal, getcontext
 from urllib import urlencode
-from parser import parser_re
+from geolucidate.parser import parser_re
 
 
 def cleanup(parts):
