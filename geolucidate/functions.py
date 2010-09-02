@@ -147,6 +147,26 @@ def bing_maps_link(type='hybrid', link=default_link):
     return func
 
 
+def yahoo_maps_link(type='map', link=default_link):
+    """
+    Returns a function for generating links to Yahoo Maps.
+
+    >>> yahoo_maps_link()(MapLink("58147N/07720W", Decimal("58.235278"), Decimal("-77.333333")))
+    u'<a href="http://maps.yahoo.com/#lat=58.235278&lon=-77.333333&mvt=m&zoom=10&q1=58.235278%2C-77.333333" title="58.235278, -77.333333">58147N/07720W</a>'
+    """
+    types = {'map': 'm', 'satellite': 's', 'hybrid': 'h'}
+
+    def func(maplink, link=default_link):
+        baseurl = "http://maps.yahoo.com/#"
+        params = {'mvt':  types[type],
+                  'lat': maplink.lat_str,
+                  'lon': maplink.long_str,
+                  'zoom': '10',
+                  'q1': maplink.coordinates(",")}
+        return maplink.make_link(baseurl, params, link)
+    return func
+
+
 def replace(string, sub_function=google_maps_link()):
     """
     Replace detected coordinates with a map link, using the given substitution
