@@ -110,14 +110,14 @@ class MapLink(object):
                               self.coordinates(", "))
 
 
-def google_maps_link(type='hybrid'):
+def google_maps_link(type='hybrid', link=default_link):
     """
     Returns a function for generating links to Google Maps.
 
     """
     types = {'map': 'm', 'satellite': 'k', 'hybrid': 'h'}
 
-    def func(maplink, link=default_link):
+    def func(maplink):
         baseurl = "http://maps.google.com/maps?"
         coordinates = maplink.coordinates(',')
         params = {'q': u"{0} ({1})".format(coordinates,
@@ -128,7 +128,7 @@ def google_maps_link(type='hybrid'):
     return func
 
 
-def bing_maps_link(type='hybrid'):
+def bing_maps_link(type='hybrid', link=default_link):
     """
     Returns a function for generating links to Bing Maps.
 
@@ -142,8 +142,7 @@ def bing_maps_link(type='hybrid'):
                   'style':  types[type],
                   'sp': u"Point.{1}_{2}_{0}".format(maplink.original_string,
                                                     maplink.lat_str,
-                                                    maplink.long_str).encode('utf-8')
-                  }
+                                                    maplink.long_str).encode('utf-8')}
         return maplink.make_link(baseurl, params, link)
     return func
 
@@ -172,8 +171,7 @@ def replace(string, sub_function=google_maps_link()):
     return parser_re.sub(do_replace, string)
 
 
-def get_replacements(string, link_function=default_link,
-                     sub_function=google_maps_link()):
+def get_replacements(string, sub_function=google_maps_link()):
     """
     Return a dict whose keys are MatchObjects and whose values are
     the corresponding replacements.  Use get_replacements() when the
@@ -193,7 +191,6 @@ def get_replacements(string, link_function=default_link,
     for match in matches:
         (latitude, longitude) = convert(*cleanup(match.groupdict()))
         substitutions[match] = sub_function(MapLink(match.group(),
-                                                    latitude, longitude),
-                                            link_function)
+                                                    latitude, longitude))
 
     return substitutions
