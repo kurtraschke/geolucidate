@@ -2,7 +2,7 @@
 
 import re
 
-parser_re = re.compile(u"""\\b
+parser_re = re.compile(ur"""\b
     # Latitude direction, first position: one of N, S, NORTH, SOUTH
     (?P<latdir>NORTH|SOUTH|[NS])?
     # Latitude degrees: two digits 0-90
@@ -13,12 +13,12 @@ parser_re = re.compile(u"""\\b
     # Latitude minutes: two digits 0-59
     (?P<latmin>[0-5][0-9])
     # If there was a degree mark before, look for punctuation after the minutes
-    (?(degmark)(\'|"|\.|\ MINUTES(,\ )?))?
+    (?(degmark)('|"|\.|\ MINUTES(,\ )?))?
     (
     # Latitude seconds: two digits 0-59
     (?P<latsec>([0-9]|[0-5][0-9]))(?(degmark)("|'|\ SECONDS\ )?)|
     # Decimal fraction of minutes
-    (?P<latdecsec>\\.\\d{1,3}))?
+    (?P<latdecsec>\.\d{1,3}))?
     )?
     # Latitude direction, second position, optionally preceded by a space
     (\ ?(?P<latdir2>(?(latdir)|(NORTH|SOUTH|[NS]))))
@@ -27,7 +27,7 @@ parser_re = re.compile(u"""\\b
     # Longitude direction, first position: one of N, S, NORTH, SOUTH
     (?(latdir)(?P<longdir>EAST|WEST|[EW]))
     # Longitude degrees: two or three digits
-    (?P<longdeg>\\d{2,3}?)
+    (?P<longdeg>\d{2,3}?)
     # If there was a degree mark before, look for another one here
     (\ |(?(degmark)(\ ?(º|°)\ ?|\.|-|\ DEGREES,\ )))?
     (?(latminsec)   #Only look for minutes and seconds in the longitude
@@ -39,7 +39,7 @@ parser_re = re.compile(u"""\\b
     # Longitude seconds: two digits 0-59
     ((?P<longsec>([0-9][0-9]))(?(degmark)("|'|\ SECONDS\ )?)|
     # Decimal fraction of minutes
-    (?P<longdecsec>\\.\\d{1,3}))?
+    (?P<longdecsec>\.\d{1,3}))?
     ))
     #Longitude direction, second position: optionally preceded by a space
     (?(latdir)|\ ?(?P<longdir2>(EAST|WEST|[EW])))
