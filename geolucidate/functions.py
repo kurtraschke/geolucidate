@@ -48,7 +48,7 @@ def convert(latdir, latdeg, latmin, latsec,
             longdir, longdeg, longmin, longsec):
     """
     >>> convert('S','50','30','30','W','50','30','30')
-    (Decimal('-50.50833333'), Decimal('-50.50833333'))
+    ('-50.508333', '-50.508333')
 
     """
     getcontext().prec = 10
@@ -65,7 +65,17 @@ def convert(latdir, latdeg, latmin, latsec,
     if longdir == 'W':
         longitude *= Decimal('-1')
 
-    return (latitude, longitude)
+    if (latsec != '00' or longsec != '00'):
+        precision = Decimal('0.000001')
+    elif (latmin != '00' or longmin != '00'):
+        precision = Decimal('0.001')
+    else:
+        precision = Decimal('1')
+
+    lat_str = str(latitude.quantize(precision))
+    long_str = str(longitude.quantize(precision))
+
+    return (lat_str, long_str)
 
 
 def default_link(url, text, title=''):
@@ -88,14 +98,10 @@ def default_link(url, text, title=''):
 
 class MapLink(object):
 
-    PRECISION = Decimal('0.000001')
-
     def __init__(self, original_string, latitude, longitude):
         self.original_string = original_string
-        self.latitude = latitude
-        self.longitude = longitude
-        self.lat_str = str(self.latitude.quantize(self.PRECISION))
-        self.long_str = str(self.longitude.quantize(self.PRECISION))
+        self.lat_str = latitude
+        self.long_str = longitude
 
     def coordinates(self, separator):
         return self.lat_str + separator + self.long_str
@@ -147,7 +153,7 @@ def yahoo_maps_link(type='map', link=default_link):
     """
     Returns a function for generating links to Yahoo Maps.
 
-    >>> yahoo_maps_link()(MapLink("58147N/07720W", Decimal("58.235278"), Decimal("-77.333333")))
+    >>> yahoo_maps_link()(MapLink("58147N/07720W", "58.235278", "-77.333333"))
     u'<a href="http://maps.yahoo.com/#lat=58.235278&lon=-77.333333&mvt=m&zoom=10&q1=58.235278%2C-77.333333" title="58.235278, -77.333333">58147N/07720W</a>'
     """
     types = {'map': 'm', 'satellite': 's', 'hybrid': 'h'}
@@ -171,11 +177,11 @@ def replace(string, sub_function=google_maps_link()):
     >>> replace("58147N/07720W")
     u'<a href="http://maps.google.com/maps?q=58.235278%2C-77.333333+%2858147N%2F07720W%29&ll=58.235278%2C-77.333333&t=h" title="58.235278, -77.333333">58147N/07720W</a>'
 
-    >>> replace("58147N/07720W", google_maps_link('satellite'))
-    u'<a href="http://maps.google.com/maps?q=58.235278%2C-77.333333+%2858147N%2F07720W%29&ll=58.235278%2C-77.333333&t=k" title="58.235278, -77.333333">58147N/07720W</a>'
+    >>> replace("5814N/07720W", google_maps_link('satellite'))
+    u'<a href="http://maps.google.com/maps?q=58.233%2C-77.333+%285814N%2F07720W%29&ll=58.233%2C-77.333&t=k" title="58.233, -77.333">5814N/07720W</a>'
 
-    >>> replace("58147N/07720W", bing_maps_link('map'))
-    u'<a href="http://bing.com/maps/default.aspx?style=r&cp=58.235278%7E-77.333333&sp=Point.58.235278_-77.333333_58147N%2F07720W&v=2" title="58.235278, -77.333333">58147N/07720W</a>'
+    >>> replace("58N/077W", bing_maps_link('map'))
+    u'<a href="http://bing.com/maps/default.aspx?style=r&cp=58%7E-77&sp=Point.58_-77_58N%2F077W&v=2" title="58, -77">58N/077W</a>'
 
     """
 
