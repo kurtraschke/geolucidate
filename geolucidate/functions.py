@@ -54,17 +54,13 @@ def convert(latdir, latdeg, latmin, latsec,
     getcontext().prec = 10
 
     latitude = Decimal(latdeg)
-
-    latsec = Decimal(latsec) / Decimal('60')
-    latitude += (Decimal(latmin) + latsec) / Decimal('60')
+    latitude += (Decimal(latmin) + (Decimal(latsec) / Decimal('60'))) / Decimal('60')
 
     if latdir == 'S':
         latitude *= Decimal('-1')
 
     longitude = Decimal(longdeg)
-
-    longsec = Decimal(longsec) / Decimal('60')
-    longitude += (Decimal(longmin) + longsec) / Decimal('60')
+    longitude += (Decimal(longmin) + (Decimal(longsec) / Decimal('60'))) / Decimal('60')
 
     if longdir == 'W':
         longitude *= Decimal('-1')
