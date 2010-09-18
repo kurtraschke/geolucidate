@@ -13,7 +13,7 @@ parser_re = re.compile(ur"""\b
     # Latitude minutes: two digits 0-59
     (?P<latmin>[0-5][0-9])
     # If there was a degree mark before, look for punctuation after the minutes
-    (?(degmark)('|"|\.|\ MINUTES(,\ )?))?
+    (\ |(?(degmark)('|"|\.|\ MINUTES(,\ )?)))?
     (
     # Latitude seconds: two digits 0-59
     (?P<latsec>([0-9]|[0-5][0-9]))(?(degmark)("|'|\ SECONDS\ )?)|
@@ -35,7 +35,7 @@ parser_re = re.compile(ur"""\b
     # Longitude minutes: two digits
     (?P<longmin>[0-5][0-9])
     # If there was a degree mark before, look for punctuation after the minutes
-    (?(degmark)('|"|\.|\ MINUTES(,\ )?))?
+    (\ |(?(degmark)('|"|\.|\ MINUTES(,\ )?)))?
     # Longitude seconds: two digits 0-59
     ((?P<longsec>([0-9][0-9]))(?(degmark)("|'|\ SECONDS\ )?)|
     # Decimal fraction of minutes

@@ -32,6 +32,10 @@ def test_parser():
         (u"""49º41'34"N 093º37'54"W""", ['N','49','41','34','W','093','37','54']),
         ("(N51.33.9 W119.02.30)", ['N','51','33','9','W','119','02','30']),
         ("49-21.834N 126-15.923W", ['N','49','21.834','00','W','126','15.923','00']),
+        #You can't have 65 seconds.
+        #("50 27 55 N 127 27 65 W", ['N','50','27','55','W','127','27','65']),
+        #We still use the same format as a test case.
+        ("50 27 55 N 127 27 59 W", ['N','50','27','55','W','127','27','59']),
         #Another oddball with impossible seconds; I really wonder where these come from.
         #("513390N 1190230W", ['N','51','33','90','W','119','02','30']),
         #Possibly missing something; 7º W isn't anywhere near Canada.
