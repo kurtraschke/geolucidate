@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import re
-from decimal import Decimal, getcontext
+from decimal import Decimal, setcontext, ExtendedContext
 from urllib import urlencode
 from geolucidate.parser import parser_re
 
+setcontext(ExtendedContext)
 
 def cleanup(parts):
     """
@@ -51,8 +52,6 @@ def convert(latdir, latdeg, latmin, latsec,
     ('-50.508333', '-50.508333')
 
     """
-    getcontext().prec = 10
-
     latitude = Decimal(latdeg)
     latitude += (Decimal(latmin) + (Decimal(latsec) / Decimal('60'))) / Decimal('60')
 
