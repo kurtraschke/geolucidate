@@ -108,7 +108,7 @@ class MapLink(object):
     def make_link(self, baseurl, params, link_generator):
         return link_generator(baseurl + urlencode(params.items()),
                               self.original_string,
-                              self.coordinates(", "))
+                              u"{0} ({1})".format(self.original_string, self.coordinates(", ")))
 
 
 def google_maps_link(type='hybrid', link=default_link):
