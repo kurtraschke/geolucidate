@@ -153,7 +153,7 @@ def yahoo_maps_link(type='map', link=default_link):
     Returns a function for generating links to Yahoo Maps.
 
     >>> yahoo_maps_link()(MapLink("58147N/07720W", "58.235278", "-77.333333"))
-    u'<a href="http://maps.yahoo.com/#lat=58.235278&lon=-77.333333&mvt=m&zoom=10&q1=58.235278%2C-77.333333" title="58.235278, -77.333333">58147N/07720W</a>'
+    u'<a href="http://maps.yahoo.com/#lat=58.235278&lon=-77.333333&mvt=m&zoom=10&q1=58.235278%2C-77.333333" title="58147N/07720W (58.235278, -77.333333)">58147N/07720W</a>'
     """
     types = {'map': 'm', 'satellite': 's', 'hybrid': 'h'}
 
@@ -174,13 +174,13 @@ def replace(string, sub_function=google_maps_link()):
     function.
 
     >>> replace("58147N/07720W")
-    u'<a href="http://maps.google.com/maps?q=58.235278%2C-77.333333+%2858147N%2F07720W%29&ll=58.235278%2C-77.333333&t=h" title="58.235278, -77.333333">58147N/07720W</a>'
+    u'<a href="http://maps.google.com/maps?q=58.235278%2C-77.333333+%2858147N%2F07720W%29&ll=58.235278%2C-77.333333&t=h" title="58147N/07720W (58.235278, -77.333333)">58147N/07720W</a>'
 
     >>> replace("5814N/07720W", google_maps_link('satellite'))
-    u'<a href="http://maps.google.com/maps?q=58.233%2C-77.333+%285814N%2F07720W%29&ll=58.233%2C-77.333&t=k" title="58.233, -77.333">5814N/07720W</a>'
+    u'<a href="http://maps.google.com/maps?q=58.233%2C-77.333+%285814N%2F07720W%29&ll=58.233%2C-77.333&t=k" title="5814N/07720W (58.233, -77.333)">5814N/07720W</a>'
 
     >>> replace("58N/077W", bing_maps_link('map'))
-    u'<a href="http://bing.com/maps/default.aspx?style=r&cp=58%7E-77&sp=Point.58_-77_58N%2F077W&v=2" title="58, -77">58N/077W</a>'
+    u'<a href="http://bing.com/maps/default.aspx?style=r&cp=58%7E-77&sp=Point.58_-77_58N%2F077W&v=2" title="58N/077W (58, -77)">58N/077W</a>'
 
     """
 
