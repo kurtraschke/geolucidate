@@ -16,9 +16,10 @@ parser_re = re.compile(ur"""\b
     (\ |(?(degmark)('|"|\.|\ MINUTES(,\ )?)))?
     (
     # Latitude seconds: two digits 0-59
-    (?P<latsec>([0-9]|[0-5][0-9]))(?(degmark)("|'|\ SECONDS\ )?)|
+    ((?P<latsec>([0-9]|[0-5][0-9]))|
     # Decimal fraction of minutes
-    (?P<latdecsec>\.\d{1,3}))?
+    (?P<latdecsec>\.\d{1,3}))?)
+    (?(degmark)("|'|\ SECONDS\ )?)
     )?
     # Latitude direction, second position, optionally preceded by a space
     (\ ?(?P<latdir2>(?(latdir)|(NORTH|SOUTH|[NS]))))
@@ -37,10 +38,11 @@ parser_re = re.compile(ur"""\b
     # If there was a degree mark before, look for punctuation after the minutes
     (\ |(?(degmark)('|"|\.|\ MINUTES(,\ )?)))?
     # Longitude seconds: two digits 0-59
-    ((?P<longsec>([0-9][0-9]))(?(degmark)("|'|\ SECONDS\ )?)|
+    ((?P<longsec>([0-9][0-9]))|
     # Decimal fraction of minutes
-    (?P<longdecsec>\.\d{1,3}))?
-    ))
+    (?P<longdecsec>\.\d{1,3}))?)
+    (?(degmark)("|'|\ SECONDS\ )?)
+    )
     #Longitude direction, second position: optionally preceded by a space
     (?(latdir)|\ ?(?P<longdir2>(EAST|WEST|[EW])))
     """, re.VERBOSE | re.UNICODE | re.IGNORECASE)
