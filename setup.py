@@ -7,10 +7,9 @@ setup(
     author='Kurt Raschke',
     author_email='kurt@kurtraschke.com',
     url='http://github.com/kurtraschke/geolucidate',
-    packages = [
+    packages=[
         "geolucidate",
         "geolucidate.tests",
     ],
-    test_suite = 'nose.collector',
-    tests_require = ['nose']
-)
+    test_suite='nose.collector',
+    tests_require=['nose'])
