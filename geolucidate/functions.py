@@ -4,8 +4,13 @@ import re
 from decimal import Decimal, setcontext, ExtendedContext
 from urllib import urlencode
 from geolucidate.parser import parser_re
+from geolucidate.links.google import google_maps_link
+from geolucidate.links.bing import bing_maps_link
+from geolucidate.links.tools import MapLink
+
 
 setcontext(ExtendedContext)
+
 
 def cleanup(parts):
     """
@@ -75,97 +80,6 @@ def convert(latdir, latdeg, latmin, latsec,
     long_str = str(longitude.quantize(precision))
 
     return (lat_str, long_str)
-
-
-def default_link(url, text, title=''):
-    """
-    The default link generating function, for generating HTML links as
-    strings. To generate links as Genshi elements, lxml elements, etc.,
-    supply an alternative link function which takes the same parameters.
-
-    >>> default_link("http://www.google.com", "Google")
-    u'<a href="http://www.google.com">Google</a>'
-
-    >>> default_link("http://www.google.com", "Google", "Google")
-    u'<a href="http://www.google.com" title="Google">Google</a>'
-
-    """
-    if title is not '':
-        title = u' title="{0}"'.format(title)
-    return u"""<a href="{0}"{2}>{1}</a>""".format(url, text, title)
-
-
-class MapLink(object):
-
-    def __init__(self, original_string, latitude, longitude):
-        self.original_string = original_string
-        self.lat_str = latitude
-        self.long_str = longitude
-
-    def coordinates(self, separator):
-        return self.lat_str + separator + self.long_str
-
-    def make_link(self, baseurl, params, link_generator):
-        return link_generator(baseurl + urlencode(params.items()),
-                              self.original_string,
-                              u"{0} ({1})".format(self.original_string, self.coordinates(", ")))
-
-
-def google_maps_link(type='hybrid', link=default_link):
-    """
-    Returns a function for generating links to Google Maps.
-
-    """
-    types = {'map': 'm', 'satellite': 'k', 'hybrid': 'h'}
-
-    def func(maplink):
-        baseurl = "http://maps.google.com/maps?"
-        coordinates = maplink.coordinates(',')
-        params = {'q': u"{0} ({1})".format(coordinates,
-                                           maplink.original_string).encode('utf-8'),
-                  'll': coordinates,
-                  't': types[type]}
-        return maplink.make_link(baseurl, params, link)
-    return func
-
-
-def bing_maps_link(type='hybrid', link=default_link):
-    """
-    Returns a function for generating links to Bing Maps.
-
-    """
-    types = {'map': 'r', 'satellite': 'a', 'hybrid': 'h'}
-
-    def func(maplink, link=default_link):
-        baseurl = "http://bing.com/maps/default.aspx?"
-        params = {'v': '2',
-                  'cp': maplink.coordinates("~"),
-                  'style':  types[type],
-                  'sp': u"Point.{1}_{2}_{0}".format(maplink.original_string,
-                                                    maplink.lat_str,
-                                                    maplink.long_str).encode('utf-8')}
-        return maplink.make_link(baseurl, params, link)
-    return func
-
-
-def yahoo_maps_link(type='map', link=default_link):
-    """
-    Returns a function for generating links to Yahoo Maps.
-
-    >>> yahoo_maps_link()(MapLink("58147N/07720W", "58.235278", "-77.333333"))
-    u'<a href="http://maps.yahoo.com/#lat=58.235278&lon=-77.333333&mvt=m&zoom=10&q1=58.235278%2C-77.333333" title="58147N/07720W (58.235278, -77.333333)">58147N/07720W</a>'
-    """
-    types = {'map': 'm', 'satellite': 's', 'hybrid': 'h'}
-
-    def func(maplink, link=default_link):
-        baseurl = "http://maps.yahoo.com/#"
-        params = {'mvt':  types[type],
-                  'lat': maplink.lat_str,
-                  'lon': maplink.long_str,
-                  'zoom': '10',
-                  'q1': maplink.coordinates(",")}
-        return maplink.make_link(baseurl, params, link)
-    return func
 
 
 def replace(string, sub_function=google_maps_link()):
