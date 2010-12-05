@@ -9,6 +9,7 @@ setup(
     url='http://github.com/kurtraschke/geolucidate',
     packages=[
         "geolucidate",
+        "geolucidate.links",
         "geolucidate.tests",
     ],
     test_suite='nose.collector',
