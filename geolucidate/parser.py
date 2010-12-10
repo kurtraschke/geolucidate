@@ -28,7 +28,7 @@ parser_re = re.compile(ur"""\b
     # Longitude direction, first position: one of N, S, NORTH, SOUTH
     (?(latdir)(?P<longdir>EAST|WEST|[EW]))
     # Longitude degrees: two or three digits
-    (?P<longdeg>\d{2,3}?)
+    (?P<longdeg>\d{2,3})
     # If there was a degree mark before, look for another one here
     (\ |(?(degmark)(\ ?(º|°)\ ?|\.|-|\ DEGREES,\ )))?
     (?(latminsec)   #Only look for minutes and seconds in the longitude
@@ -45,4 +45,5 @@ parser_re = re.compile(ur"""\b
     )
     #Longitude direction, second position: optionally preceded by a space
     (?(latdir)|\ ?(?P<longdir2>(EAST|WEST|[EW])))
+    \b
     """, re.VERBOSE | re.UNICODE | re.IGNORECASE)
