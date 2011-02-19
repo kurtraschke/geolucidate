@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from geolucidate.functions import cleanup
+from geolucidate.functions import _cleanup
 from geolucidate.parser import parser_re
 
 from nose.tools import eq_
@@ -63,7 +63,7 @@ def test_parser():
 def check_parser(coord_string, result):
     match = parser_re.search(coord_string)
     assert match
-    eq_(cleanup(match.groupdict()), result)
+    eq_(_cleanup(match.groupdict()), result)
 
 
 def test_false_positive():

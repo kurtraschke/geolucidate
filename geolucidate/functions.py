@@ -12,14 +12,16 @@ from geolucidate.links.tools import MapLink
 setcontext(ExtendedContext)
 
 
-def cleanup(parts):
+def _cleanup(parts):
     """
-    >>> cleanup({'latdir': 'south', 'longdir': 'west',
+    Normalize up the parts matched by :obj:`parser.parser_re` to degrees, minutes, and seconds.
+
+    >>> _cleanup({'latdir': 'south', 'longdir': 'west',
     ...          'latdeg':'60','latmin':'30',
     ...          'longdeg':'50','longmin':'40'})
     ['S', '60', '30', '00', 'W', '50', '40', '00']
 
-    >>> cleanup({'latdir': 'south', 'longdir': 'west',
+    >>> _cleanup({'latdir': 'south', 'longdir': 'west',
     ...          'latdeg':'60','latmin':'30', 'latdecsec':'.50',
     ...          'longdeg':'50','longmin':'40','longdecsec':'.90'})
     ['S', '60', '30.50', '00', 'W', '50', '40.90', '00']
@@ -50,10 +52,12 @@ def cleanup(parts):
     return [latdir, latdeg, latmin, latsec, longdir, longdeg, longmin, longsec]
 
 
-def convert(latdir, latdeg, latmin, latsec,
+def _convert(latdir, latdeg, latmin, latsec,
             longdir, longdeg, longmin, longsec):
     """
-    >>> convert('S','50','30','30','W','50','30','30')
+    Convert normalized degrees, minutes, and seconds to decimal degrees.
+
+    >>> _convert('S','50','30','30','W','50','30','30')
     ('-50.508333', '-50.508333')
 
     """
@@ -100,7 +104,7 @@ def replace(string, sub_function=google_maps_link()):
 
     def do_replace(match):
         original_string = match.group()
-        (latitude, longitude) = convert(*cleanup(match.groupdict()))
+        (latitude, longitude) = _convert(*_cleanup(match.groupdict()))
         return sub_function(MapLink(original_string, latitude, longitude))
 
     return parser_re.sub(do_replace, string)
@@ -108,23 +112,35 @@ def replace(string, sub_function=google_maps_link()):
 
 def get_replacements(string, sub_function=google_maps_link()):
     """
-    Return a dict whose keys are MatchObjects and whose values are
-    the corresponding replacements.  Use get_replacements() when the
-    replacement cannot be performed through ordinary string substitution
-    by re.sub, as in replace().
+    Return a dict whose keys are instances of :class:`re.MatchObject` and
+    whose values are the corresponding replacements.  Use :func:`get_replacements`
+    when the replacement cannot be performed through ordinary string substitution
+    by :func:`re.sub`, as in :func:`replace`.
 
 
     >>> get_replacements("4630 NORTH 5705 WEST 58147N/07720W")
     ... #doctest: +ELLIPSIS
     {<_sre.SRE_Match object at ...>: u'<a href="..." title="...">4630 NORTH 5705 WEST</a>', <_sre.SRE_Match object at ...>: u'<a href="..." title="...">58147N/07720W</a>'}
 
+    >>> string = "4630 NORTH 5705 WEST 58147N/07720W"
+    >>> replacements = get_replacements(string)
+    >>> offset = 0
+    >>> from UserString import MutableString
+    >>> out = MutableString(string)
+    >>> for (match, link) in replacements.iteritems():
+    ...     start = match.start() + offset
+    ...     end = match.end() + offset
+    ...     out[start:end] = link
+    ...     offset += (len(link) - len(match.group()))
+    >>> out == replace(string)
+    True
     """
 
     substitutions = {}
     matches = parser_re.finditer(string)
 
     for match in matches:
-        (latitude, longitude) = convert(*cleanup(match.groupdict()))
+        (latitude, longitude) = _convert(*_cleanup(match.groupdict()))
         substitutions[match] = sub_function(MapLink(match.group(),
                                                     latitude, longitude))
 
