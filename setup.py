@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='geolucidate',
-    version='0.1',
+    version='0.2',
     description='Turn coordinates in text into links.',
     author='Kurt Raschke',
     author_email='kurt@kurtraschke.com',
