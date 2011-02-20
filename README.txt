@@ -13,6 +13,3 @@ recognizable format, it should be parsed correctly.
 The test cases in tests/tests.py have all been harvested from various
 recent CADORS reports.  Some test cases which have been determined to
 be invalid input have been commented out.
-
-There is no formal documentation yet, but the docstring for replace()
-should provide sufficient guidance for now.
