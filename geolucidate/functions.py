@@ -14,7 +14,8 @@ setcontext(ExtendedContext)
 
 def _cleanup(parts):
     """
-    Normalize up the parts matched by :obj:`parser.parser_re` to degrees, minutes, and seconds.
+    Normalize up the parts matched by :obj:`parser.parser_re` to
+    degrees, minutes, and seconds.
 
     >>> _cleanup({'latdir': 'south', 'longdir': 'west',
     ...          'latdeg':'60','latmin':'30',
@@ -62,13 +63,15 @@ def _convert(latdir, latdeg, latmin, latsec,
 
     """
     latitude = Decimal(latdeg)
-    latitude += (Decimal(latmin) + (Decimal(latsec) / Decimal('60'))) / Decimal('60')
+    latitude += (Decimal(latmin) +
+                 (Decimal(latsec) / Decimal('60'))) / Decimal('60')
 
     if latdir == 'S':
         latitude *= Decimal('-1')
 
     longitude = Decimal(longdeg)
-    longitude += (Decimal(longmin) + (Decimal(longsec) / Decimal('60'))) / Decimal('60')
+    longitude += (Decimal(longmin) +
+                  (Decimal(longsec) / Decimal('60'))) / Decimal('60')
 
     if longdir == 'W':
         longitude *= Decimal('-1')
@@ -113,9 +116,10 @@ def replace(string, sub_function=google_maps_link()):
 def get_replacements(string, sub_function=google_maps_link()):
     """
     Return a dict whose keys are instances of :class:`re.MatchObject` and
-    whose values are the corresponding replacements.  Use :func:`get_replacements`
-    when the replacement cannot be performed through ordinary string substitution
-    by :func:`re.sub`, as in :func:`replace`.
+    whose values are the corresponding replacements.  Use
+    :func:`get_replacements` when the replacement cannot be performed
+    through ordinary string substitution by :func:`re.sub`, as in
+    :func:`replace`.
 
 
     >>> get_replacements("4630 NORTH 5705 WEST 58147N/07720W")

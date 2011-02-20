@@ -7,7 +7,7 @@ def yahoo_maps_link(type='hybrid', link=default_link):
 
     :param type: map type, one of  'map', 'satellite', or 'hybrid'
     :param link: Link-generating function; defaults to :func:`~.default_link`
-    
+
     >>> from .tools import MapLink
     >>> yahoo_maps_link()(MapLink("CN Tower", "43.6426", "-79.3871"))
     u'<a href="http://maps.yahoo.com/#lat=43.6426&lon=-79.3871&mvt=h&zoom=10&q1=43.6426%2C-79.3871" title="CN Tower (43.6426, -79.3871)">CN Tower</a>'

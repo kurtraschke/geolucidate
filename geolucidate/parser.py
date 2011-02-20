@@ -18,7 +18,8 @@ parser_re = re.compile(ur"""\b
     (?P<latdir>NORTH|SOUTH|[NS])?
     # Latitude degrees: two digits 0-90
     (?P<latdeg>([0-8][0-9])|90)
-    # Optional space, degree mark, period, or word separating degrees and minutes
+    # Optional space, degree mark, period,
+    # or word separating degrees and minutes
     (\ |(?P<degmark>\ ?(º|°)\ ?|\.|-|\ DEGREES,\ ))?
     (?P<latminsec>
     # Latitude minutes: two digits 0-59
@@ -58,4 +59,5 @@ parser_re = re.compile(ur"""\b
     (?(latdir)|\ ?(?P<longdir2>(EAST|WEST|[EW])))
     \b
     """, re.VERBOSE | re.UNICODE | re.IGNORECASE)
-"""The regular expression itself, as returned by :func:`re.compile`"""
+"""The coordinate-parsing regular expression,
+compiled with :func:`re.compile`"""

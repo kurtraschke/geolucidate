@@ -7,7 +7,7 @@ def bing_maps_link(type='hybrid', link=default_link):
 
     :param type: map type, one of  'map', 'satellite', or 'hybrid'
     :param link: link-generating function; defaults to :func:`~.default_link`
-    
+
     >>> from .tools import MapLink
     >>> bing_maps_link()(MapLink("CN Tower", "43.6426", "-79.3871"))
     u'<a href="http://bing.com/maps/default.aspx?style=h&cp=43.6426%7E-79.3871&sp=Point.43.6426_-79.3871_CN+Tower&v=2" title="CN Tower (43.6426, -79.3871)">CN Tower</a>'

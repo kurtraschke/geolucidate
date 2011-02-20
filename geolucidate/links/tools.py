@@ -4,9 +4,9 @@ from urllib import urlencode
 def default_link(url, text, title=''):
     '''
     The default link generating function, for generating HTML links as
-    strings. To generate links as `Genshi <http://genshi.edgewall.org/>`_ elements,
-    `lxml <http://lxml.de/>`_ elements, etc.,
-    supply an alternative link function which takes the same parameters.
+    strings. To generate links as `Genshi <http://genshi.edgewall.org/>`_
+    elements, `lxml <http://lxml.de/>`_ elements, etc., supply an
+    alternate link-generating function which takes the same parameters.
 
     >>> default_link("http://www.google.com", "Google")
     u'<a href="http://www.google.com">Google</a>'
@@ -27,7 +27,7 @@ class MapLink(object):
     >>> ml = MapLink("58147N/07720W", "58.235278", "-77.333333")
     >>> ml
     <MapLink 58.235278, -77.333333>
-    
+
     '''
 
     def __init__(self, original_string, latitude, longitude):
@@ -36,7 +36,7 @@ class MapLink(object):
         and original string.
 
         '''
-        
+
         self.original_string = original_string
         self.lat_str = latitude
         self.long_str = longitude
@@ -51,8 +51,9 @@ class MapLink(object):
 
     def make_link(self, baseurl, params, link_generator):
         '''
-        Use the link generator function :obj:`link_generator` to generate a link to
-        the URL :obj:`baseurl`, with parameters :obj:`params`.
+        Calls the link generator function passed as :obj:`link_generator`
+        to generate a link to the URL :obj:`baseurl`, with parameters
+        :obj:`params`.
 
         The link text is set to the original string, while the
         link title is set to the original string followed by
@@ -65,12 +66,13 @@ class MapLink(object):
         ...               'lon': ml.long_str},
         ...              default_link)
         u'<a href="http://www.example.com/?lat=-10.0&foo=bar&lon=20.0" title="ABC123 (-10.0, 20.0)">ABC123</a>'
-        
+
         '''
-        
+
         return link_generator(baseurl + urlencode(params.items()),
                               self.original_string,
-                              u"{0} ({1})".format(self.original_string, self.coordinates(", ")))
+                              u"{0} ({1})".format(self.original_string,
+                                                  self.coordinates(", ")))
 
     def __repr__(self):
         return "<MapLink %s>" % self.coordinates(", ")
