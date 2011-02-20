@@ -31,7 +31,7 @@ class MapLink(object):
         self.lat_str = latitude
         self.long_str = longitude
 
-    def coordinates(self, separator):
+    def coordinates(self, separator=''):
         return self.lat_str + separator + self.long_str
 
     def make_link(self, baseurl, params, link_generator):
