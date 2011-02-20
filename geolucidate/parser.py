@@ -1,5 +1,16 @@
 # -*- coding: utf-8 -*-
 
+"""
+This module contains the regular expression which is used by
+geolucidate to identify and extract geographic coordinates.
+
+It is a point of some pride for the author that despite the
+diversity of formats accepted by geolucidate, only a single regular
+expression is needed to parse all of them.  This has, however,
+resulted in a rather lengthy and complex regular expression.
+
+"""
+
 import re
 
 parser_re = re.compile(ur"""\b
@@ -47,3 +58,4 @@ parser_re = re.compile(ur"""\b
     (?(latdir)|\ ?(?P<longdir2>(EAST|WEST|[EW])))
     \b
     """, re.VERBOSE | re.UNICODE | re.IGNORECASE)
+"""The regular expression itself, as returned by :func:`re.compile`"""

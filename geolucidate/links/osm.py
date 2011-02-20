@@ -5,6 +5,8 @@ def openstreetmap_link(link=default_link):
     '''
     Returns a function for generating links to OpenStreetMap.
 
+    :param link: Link-generating function; defaults to :func:`~.default_link`
+
     >>> from .tools import MapLink
     >>> openstreetmap_link()(MapLink("CN Tower", "43.6426", "-79.3871"))
     u'<a href="http://www.openstreetmap.org/?mlat=43.6426&mlon=-79.3871&zoom=9" title="CN Tower (43.6426, -79.3871)">CN Tower</a>'
