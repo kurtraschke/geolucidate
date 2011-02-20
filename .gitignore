@@ -4,11 +4,13 @@
 *~
 *.pyo
 *.egg-info
+*.egg
 .coverage
 .noseids
 build
 bin
 dist
+docs/build
 eggs
 parts
 develop-eggs
