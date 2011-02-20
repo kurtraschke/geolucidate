@@ -8,4 +8,4 @@ Modules
    geolucidate
    functions
    parser
-   links/*
+   links/index

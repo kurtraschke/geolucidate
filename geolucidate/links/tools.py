@@ -30,6 +30,15 @@ class MapLink(object):
 
     '''
 
+    lat_str = None
+    """Latitude value, converted to a string.  Automatically quantized
+    according to input precision."""
+    long_str = None
+    """Longitude value, converted to a string. Automatically quantized
+    according to input precision."""
+    original_string = None
+    """Original string contaning parsed coordinates."""
+
     def __init__(self, original_string, latitude, longitude):
         '''
         Create a :class:`MapLink` with the given latitude, longitude,
@@ -58,6 +67,13 @@ class MapLink(object):
         The link text is set to the original string, while the
         link title is set to the original string followed by
         the parsed coordinates in parentheses.
+
+        :param baseurl: Base URL to pass to link generator; should end in '?'
+        :param params: Dictionary of parameters to be URL-encoded with
+                       :func:`~urllib.urlencode` and appended to the base URL
+        :param link_generator: Link-generating function; should take as
+                               parameters the URL, text, and title, and return
+                               generated HTML link
 
         >>> ml = MapLink("ABC123", "-10.0", "20.0")
         >>> ml.make_link("http://www.example.com/?",

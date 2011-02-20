@@ -57,6 +57,8 @@ def _convert(latdir, latdeg, latmin, latsec,
             longdir, longdeg, longmin, longsec):
     """
     Convert normalized degrees, minutes, and seconds to decimal degrees.
+    Quantize the converted value based on the input precision and
+    return a 2-tuple of strings.
 
     >>> _convert('S','50','30','30','W','50','30','30')
     ('-50.508333', '-50.508333')
@@ -93,6 +95,10 @@ def replace(string, sub_function=google_maps_link()):
     """
     Replace detected coordinates with a map link, using the given substitution
     function.
+
+    The substitution function will be passed a :class:`~.MapLink` instance, and
+    should return a string which will be substituted by :func:`re.sub` in place
+    of the detected coordinates.
 
     >>> replace("58147N/07720W")
     u'<a href="http://maps.google.com/maps?q=58.235278%2C-77.333333+%2858147N%2F07720W%29&ll=58.235278%2C-77.333333&t=h" title="58147N/07720W (58.235278, -77.333333)">58147N/07720W</a>'
