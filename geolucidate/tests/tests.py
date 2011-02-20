@@ -30,7 +30,7 @@ def test_parser():
         ("52 North 50 West", ['N', '52', '00', '00', 'W', '50', '00', '00']),
         (u"70 ° 57N 070 ° 05W", ['N', '70', '57', '00', 'W', '070', '05', '00']),
         (u"""(45º10'17"N 076º23'46"W)""", ['N', '45', '10', '17', 'W', '076', '23', '46']),
-        #Note that this is actually backwards; we support it anyway.
+        #Note that the degree and minute punctuation are actually backwards; we support it anyway.
         (u"""(45º10"17'N 076º23"46'W" """, ['N', '45', '10', '17', 'W', '076', '23', '46']),
         (u"43º55'N 078º18'W", ['N', '43', '55', '00', 'W', '078', '18', '00']),
         (u"43º01N 081º46W", ['N', '43', '01', '00', 'W', '081', '46', '00']),
