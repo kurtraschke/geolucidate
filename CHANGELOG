@@ -1,5 +1,8 @@
 * 0.1
   Initial public release
 
-* 0.1
+* 0.2
   Added documentation and two test cases
+
+* 0.3
+  Correct handling of decimal fractions of minutes, and update documentation accordingly.

@@ -38,10 +38,16 @@ Additionally, the following conditions are placed on input:
   punctuation marks:
   ``"``, ``'``, ``SECONDS``.
 
+* 'Seconds' which are preceded by a decimal point or which are greater
+  than 59 will be treated as a decimal fraction of minutes; that is,
+  they will be divided by 100 rather than 60.
+
 * Degree marks and punctuation following minutes and seconds are only
   accepted if a degree mark is present following the latitude
   degrees.  The effect of this is that the use of degree
   marks/punctuation must be consistent.
 
 * Numeric values must be within sensible ranges; degrees greater than
-  90 are not accepted; nor are minutes or seconds greater than 59.
+  90 for latitude or 180 for longitude are not accepted; nor are minutes
+  or seconds (subject to the caveat above regarding decimal fractions of
+  minutes) greater than 59.
