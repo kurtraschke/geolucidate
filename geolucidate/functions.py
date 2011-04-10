@@ -64,26 +64,39 @@ def _convert(latdir, latdeg, latmin, latsec,
     ('-50.508333', '-50.508333')
 
     """
-    latitude = Decimal(latdeg)
-    latitude += (Decimal(latmin) +
-                 (Decimal(latsec) / Decimal('60'))) / Decimal('60')
-
-    if latdir == 'S':
-        latitude *= Decimal('-1')
-
-    longitude = Decimal(longdeg)
-    longitude += (Decimal(longmin) +
-                  (Decimal(longsec) / Decimal('60'))) / Decimal('60')
-
-    if longdir == 'W':
-        longitude *= Decimal('-1')
-
     if (latsec != '00' or longsec != '00'):
         precision = Decimal('0.000001')
     elif (latmin != '00' or longmin != '00'):
         precision = Decimal('0.001')
     else:
         precision = Decimal('1')
+
+    latitude = Decimal(latdeg)
+    latmin = Decimal(latmin)
+    latsec = Decimal(latsec)
+
+    longitude = Decimal(longdeg)
+    longmin = Decimal(longmin)
+    longsec = Decimal(longsec)
+
+    if latsec > 59 or longsec > 59:
+        #Assume that 'seconds' greater than 59 are actually a decimal
+        #fraction of minutes
+        latitude += (latmin +
+                     (latsec / Decimal('100'))) / Decimal('60')
+        longitude += (longmin +
+                  (longsec / Decimal('100'))) / Decimal('60')
+    else:
+        latitude += (latmin +
+                     (latsec / Decimal('60'))) / Decimal('60')
+        longitude += (longmin +
+                      (longsec / Decimal('60'))) / Decimal('60')
+
+    if latdir == 'S':
+        latitude *= Decimal('-1')
+
+    if longdir == 'W':
+        longitude *= Decimal('-1')
 
     lat_str = str(latitude.quantize(precision))
     long_str = str(longitude.quantize(precision))

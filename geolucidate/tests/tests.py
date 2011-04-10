@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from geolucidate.functions import _cleanup
+from geolucidate.functions import _cleanup, _convert
 from geolucidate.parser import parser_re
 
 from nose.tools import eq_
@@ -35,39 +35,35 @@ def test_parser():
         (u"43º55'N 078º18'W", ['N', '43', '55', '00', 'W', '078', '18', '00']),
         (u"43º01N 081º46W", ['N', '43', '01', '00', 'W', '081', '46', '00']),
         (u"""49º41'34"N 093º37'54"W""", ['N', '49', '41', '34', 'W', '093', '37', '54']),
-        ("(N51.33.9 W119.02.30)", ['N', '51', '33', '9', 'W', '119', '02', '30']),
+        ("(N51.33.9 W119.02.30)", ['N', '51', '33.9', '00', 'W', '119', '02.30', '00']),
+        ("N50.26.008 W121.41.470", ['N', '50', '26.008', '00', 'W', '121', '41.470', '00']),
         ("49-21.834N 126-15.923W", ['N', '49', '21.834', '00', 'W', '126', '15.923', '00']),
         (u"(40º02.247'N 111º44.383'W)", ['N', '40', '02.247', '00', 'W', '111', '44.383', '00']),
         ("N495342 / W0742553", ['N', '49', '53', '42', 'W', '074', '25', '53']),
+        ("502661N 1214161W", ['N', '50', '26', '61', 'W', '121', '41', '61']),
+        #The 'seconds' may in fact be a decimal fraction of minutes.
+        ("50 27 55 N 127 27 65 W", ['N', '50', '27', '55', 'W', '127', '27', '65']),
+        #Longitude seconds (95) may be a decimal fraction of minutes.
+        ("484819N 1231195W",  ['N', '48', '48', '19', 'W', '123', '11', '95']),
         #No direction given for latitude and longitude;
         #are we to assume north and west?
         #(u"""(43º52'43"/079º48'13")""", ['',  '43',  '52',  '43',  '',  '079',  '48',  '13']),
-        #You can't have 65 seconds.
-        #("50 27 55 N 127 27 65 W", ['N', '50', '27', '55', 'W', '127', '27', '65']),
-        #We still use the same format as a test case.
-        ("50 27 55 N 127 27 59 W", ['N', '50', '27', '55', 'W', '127', '27', '59']),
-        #Another oddball with impossible seconds; I really wonder where these come from.
-        #("513390N 1190230W", ['N', '51', '33', '90', 'W', '119', '02', '30']),
         #Possibly missing something; 7º W isn't anywhere near Canada.
         #("5617N/0721W", ['N', '56', '17', '00', 'W', '07', '21', '00']),
         #Latitude and longitude reversed.
         #("10626W / 5156N",  ['N', '', '', '', 'W', '', '', '']),
-        #Longitude seconds (78) impossible.
-        #("491129N 1230778W",  ['N', '49', '11', '29', 'W', '123', '07', '78']),
-        #Longitude seconds (95) impossible.
-        #("484819N 1231195W",  ['N', '48', '48', '13', 'W', '123', '11', '95']),
         ]
 
     for test in values:
-        (coord_string, result) = test
-        yield check_parser, coord_string, result
+        (coord_string, expected) = test
+        yield check_parser, coord_string, expected
 
 
-def check_parser(coord_string, result):
+def check_parser(coord_string, expected):
     match = parser_re.search(coord_string)
     assert match
-    eq_(_cleanup(match.groupdict()), result)
-
+    result = _cleanup(match.groupdict())
+    eq_(result, expected)
 
 def test_false_positive():
     values = ["GGN7383 was", "6830N 70W"]
