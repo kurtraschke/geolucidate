@@ -15,7 +15,7 @@ import re
 
 parser_re = re.compile(ur"""\b
     # Latitude direction, first position: one of N, S, NORTH, SOUTH
-    (?P<latdir>NORTH|SOUTH|[NS])?
+    ((?P<latdir>NORTH|SOUTH|[NS])\ ?)?
     # Latitude degrees: two digits 0-90
     (?P<latdeg>([0-8][0-9])|90)
     # Optional space, degree mark, period,
@@ -37,8 +37,8 @@ parser_re = re.compile(ur"""\b
     (\ ?(?P<latdir2>(?(latdir)|(NORTH|SOUTH|[NS]))))
     # Latitude/longitude delimiter: space, forward slash, comma, or none
     (\ ?[ /]\ ?|,\ )?
-    # Longitude direction, first position: one of N, S, NORTH, SOUTH
-    (?(latdir)(?P<longdir>EAST|WEST|[EW]))
+    # Longitude direction, first position: one of E, W, EAST, WEST
+    (?(latdir)((?P<longdir>EAST|WEST|[EW])\ ?))
     # Longitude degrees: two or three digits
     (?P<longdeg>((1(([0-7][0-9]|80))|(0?[0-9][0-9]))))
     # If there was a degree mark before, look for another one here
