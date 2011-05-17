@@ -1,8 +1,13 @@
 * 0.1
-  Initial public release
+  Initial public release.
 
 * 0.2
-  Added documentation and two test cases
+  Added documentation and two test cases.
 
 * 0.3
-  Correct handling of decimal fractions of minutes, and update documentation accordingly.
+  Correct handling of decimal fractions of minutes, and update
+  documentation accordingly.
+  Treat 'seconds' values over 59 as being a decimal fraction of
+  minutes (that is, they are divided by 100 rather than 60).
+  Address a parsing bug for coordinates of the form "N 5930 W 12330",
+  where the direction comes first and is followed by a space.

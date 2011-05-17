@@ -2,8 +2,8 @@ from setuptools import setup
 
 setup(
     name='geolucidate',
-    version='0.2',
-    description='Turn coordinates in text into links.',
+    version='0.3',
+    description='Parse free-form geographic coordinates in text, and automatically generate links and metadata.',
     author='Kurt Raschke',
     author_email='kurt@kurtraschke.com',
     url='http://github.com/kurtraschke/geolucidate',
