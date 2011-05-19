@@ -5,7 +5,6 @@ from decimal import Decimal, setcontext, ExtendedContext
 from urllib import urlencode
 from geolucidate.parser import parser_re
 from geolucidate.links.google import google_maps_link
-from geolucidate.links.bing import bing_maps_link
 from geolucidate.links.tools import MapLink
 
 
@@ -119,6 +118,7 @@ def replace(string, sub_function=google_maps_link()):
     >>> replace("5814N/07720W", google_maps_link('satellite'))
     u'<a href="http://maps.google.com/maps?q=58.233%2C-77.333+%285814N%2F07720W%29&ll=58.233%2C-77.333&t=k" title="5814N/07720W (58.233, -77.333)">5814N/07720W</a>'
 
+    >>> from geolucidate.links.bing import bing_maps_link
     >>> replace("58N/077W", bing_maps_link('map'))
     u'<a href="http://bing.com/maps/default.aspx?style=r&cp=58%7E-77&sp=Point.58_-77_58N%2F077W&v=2" title="58N/077W (58, -77)">58N/077W</a>'
 
