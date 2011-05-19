@@ -62,6 +62,9 @@ def _convert(latdir, latdeg, latmin, latsec,
     >>> _convert('S','50','30','30','W','50','30','30')
     ('-50.508333', '-50.508333')
 
+    >>> _convert('N','50','27','55','W','127','27','65')
+    ('50.459167', '-127.460833')
+
     """
     if (latsec != '00' or longsec != '00'):
         precision = Decimal('0.000001')
