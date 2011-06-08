@@ -11,3 +11,6 @@
   minutes (that is, they are divided by 100 rather than 60).
   Address a parsing bug for coordinates of the form "N 5930 W 12330",
   where the direction comes first and is followed by a space.
+
+* 0.4
+  Accomodate coordinates with single-digit minutes.

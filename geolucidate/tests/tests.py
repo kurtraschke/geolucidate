@@ -46,6 +46,8 @@ def test_parser():
         ("50 27 55 N 127 27 65 W", ['N', '50', '27', '55', 'W', '127', '27', '65']),
         #Longitude seconds (95) may be a decimal fraction of minutes.
         ("484819N 1231195W",  ['N', '48', '48', '19', 'W', '123', '11', '95']),
+        #The minutes may be a single digit.
+        (u"N45° 28' W77° 1'", ['N', '45', '28', '00', 'W', '77', '1', '00']),
         #No direction given for latitude and longitude;
         #are we to assume north and west?
         #(u"""(43º52'43"/079º48'13")""", ['',  '43',  '52',  '43',  '',  '079',  '48',  '13']),
