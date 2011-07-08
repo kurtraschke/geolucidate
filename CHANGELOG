@@ -13,4 +13,8 @@
   where the direction comes first and is followed by a space.
 
 * 0.4
-  Accomodate coordinates with single-digit minutes.
+  Accommodate coordinates with single-digit minutes.
+  Improve parsing for coordinates where a period is used
+  between the seconds and minutes.  This results in a change
+  from previous behavior, and is described in the "Notes on
+  input formats" in the documentation.

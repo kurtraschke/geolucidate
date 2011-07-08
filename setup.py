@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='geolucidate',
-    version='0.3',
+    version='0.4',
     description='Parse free-form geographic coordinates in text, and automatically generate links and metadata.',
     author='Kurt Raschke',
     author_email='kurt@kurtraschke.com',
