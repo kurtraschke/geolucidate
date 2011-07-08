@@ -20,7 +20,7 @@ parser_re = re.compile(ur"""\b
     (?P<latdeg>([0-8][0-9])|90)
     # Optional space, degree mark, period,
     # or word separating degrees and minutes
-    (\ |(?P<degmark>\ ?(º|°)\ ?|\.|-|\ DEGREES,\ ))?
+    (\ |(?P<degmark>\ ?(º|°)\ ?|(?P<degpd>\.)|-|\ DEGREES,\ ))?
     (?P<latminsec>
     # Latitude minutes: two digits 0-59
     (?P<latmin>([0-5]?)[0-9])
@@ -28,7 +28,8 @@ parser_re = re.compile(ur"""\b
     (\ |(?(degmark)('|"|\ MINUTES(,\ )?)))?
     (
     # Latitude seconds: two digits
-    ((?P<latsec>(\d{1,2}))|
+    (
+    ((?(degpd)\.?)(?P<latsec>(\d{1,2})))|
     # Decimal fraction of minutes
     (?P<latdecsec>\.\d{1,3}))?)
     (?(degmark)("|'|\ SECONDS\ )?)
@@ -50,7 +51,8 @@ parser_re = re.compile(ur"""\b
     # If there was a degree mark before, look for punctuation after the minutes
     (\ |(?(degmark)('|"|\ MINUTES(,\ )?)))?
     # Longitude seconds: two digits
-    ((?P<longsec>(\d{1,2}))|
+    (
+    ((?(degpd)\.?)(?P<longsec>(\d{1,2})))|
     # Decimal fraction of minutes
     (?P<longdecsec>\.\d{1,3}))?)
     (?(degmark)("|'|\ SECONDS\ )?)

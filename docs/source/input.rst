@@ -38,9 +38,30 @@ Additionally, the following conditions are placed on input:
   punctuation marks:
   ``"``, ``'``, ``SECONDS``.
 
-* 'Seconds' which are preceded by a decimal point or which are greater
-  than 59 will be treated as a decimal fraction of minutes; that is,
-  they will be divided by 100 rather than 60.
+* 'Seconds' which are preceded by a decimal point, which are greater
+  than 59, or which are three digits long will be treated as a decimal
+  fraction of minutes; that is, they will be divided by 100 rather
+  than 60.  If a period is used to separate degrees and minutes, then
+  any period present between the minutes and seconds is taken as a
+  separator, rather than a decimal point.  Several examples may help
+  to clarify this point:
+
+  - ``N51.33.9`` is parsed as 51 degrees, 33 minutes, and 9 seconds,
+    because a period is used to separate the degrees and minutes, and
+    the value in the seconds position is less than 60.
+
+  - ``N50.26.008`` is parsed as 51 degrees, 26.008 minutes.  This is
+    because the 'seconds' value is three digits long.
+
+  - ``49-21.834N`` is parsed as 49 degrees, 21.834 minutes.  Again,
+    this is due to the presence of a decimal point and a three-digit
+    'seconds' value.
+
+  - ``N53 35.48`` is parsed as 53 degrees, 35.48 minutes.  Despite the
+    fact that the 'seconds' value is only two digits long and less
+    than 60, the fact that there is no period used between the degrees
+    and minutes is taken to mean that the period which is found
+    between the minutes and 'seconds' is actually a decimal point.
 
 * Degree marks and punctuation following minutes and seconds are only
   accepted if a degree mark is present following the latitude

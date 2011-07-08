@@ -36,7 +36,9 @@ def test_parser():
         (u"43º55'N 078º18'W", ['N', '43', '55', '00', 'W', '078', '18', '00']),
         (u"43º01N 081º46W", ['N', '43', '01', '00', 'W', '081', '46', '00']),
         (u"""49º41'34"N 093º37'54"W""", ['N', '49', '41', '34', 'W', '093', '37', '54']),
-        ("(N51.33.9 W119.02.30)", ['N', '51', '33.9', '00', 'W', '119', '02.30', '00']),
+        #See note below on confusion created by using periods both as a decimal separator
+        #and to delimit parts of coordinates.
+        ("(N51.33.9 W119.02.30)", ['N', '51', '33', '9', 'W', '119', '02', '30']),
         ("N50.26.008 W121.41.470", ['N', '50', '26.008', '00', 'W', '121', '41.470', '00']),
         ("49-21.834N 126-15.923W", ['N', '49', '21.834', '00', 'W', '126', '15.923', '00']),
         (u"(40º02.247'N 111º44.383'W)", ['N', '40', '02.247', '00', 'W', '111', '44.383', '00']),
@@ -60,6 +62,13 @@ def test_parser():
         #Can't figure out how to parse this one.  The latitude seems to have seconds with a decimal
         #fraction, but if that's the case, then there aren't enough digits for the longitude.
         #("464525.9N04622.4W", ['N', '46', '45', '25.9', 'W', '046', '22.4', '00']),
+        #Where a period is used to separate the degrees and minutes, and the minutes and seconds,
+        #it's hard to tell if the 'seconds' are meant to be seconds or a decimal fraction of minutes
+        #(given that the period is also a decimal separator)
+        ("493616N 1221258W",  ['N', '49', '36', '16', 'W', '122','12', '58']),
+        #If the a period is used to separate the degrees and minutes, _and_ the 'seconds' value
+        #is only two digits, we now treat it as a proper seconds value rather than a decimal fraction.
+        ("49.36.16N 122.12.58W", ['N', '49', '36', '16', 'W', '122','12', '58'])
         ]
 
     for test in values:
