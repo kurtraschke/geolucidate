@@ -57,6 +57,9 @@ def test_parser():
         #("10626W / 5156N",  ['N', '', '', '', 'W', '', '', '']),
         #Can't have 71 minutes.
         #(u"""(46º71'56"N 081º13'08"W)""", ['N', '46', '71', '56', 'W', '081', '13', '08']),
+        #Can't figure out how to parse this one.  The latitude seems to have seconds with a decimal
+        #fraction, but if that's the case, then there aren't enough digits for the longitude.
+        #("464525.9N04622.4W", ['N', '46', '45', '25.9', 'W', '046', '22.4', '00']),
         ]
 
     for test in values:
