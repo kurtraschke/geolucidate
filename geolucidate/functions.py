@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-
-import re
 from decimal import Decimal, setcontext, ExtendedContext
-from urllib import urlencode
+
 from geolucidate.parser import parser_re
 from geolucidate.links.google import google_maps_link
 from geolucidate.links.tools import MapLink

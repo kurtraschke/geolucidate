@@ -15,3 +15,4 @@ eggs
 parts
 develop-eggs
 .DS_Store
+.idea

@@ -13,7 +13,7 @@ resulted in a rather lengthy and complex regular expression.
 
 import re
 
-parser_re = re.compile(ur"""\b
+parser_re = re.compile(r"""\b
     # Latitude direction, first position: one of N, S, NORTH, SOUTH
     ((?P<latdir>NORTH|SOUTH|[NS])\ ?)?
     # Latitude degrees: two digits 0-90
