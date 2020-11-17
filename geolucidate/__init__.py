@@ -10,4 +10,4 @@ u'<a href="http://maps.google.com/maps?q=58.235278%2C-77.333333+%2858147N%2F0772
 
 """
 
-from functions import replace, google_maps_link
+from .functions import replace, google_maps_link
