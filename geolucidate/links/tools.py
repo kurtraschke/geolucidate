@@ -1,7 +1,7 @@
 from urllib.parse import urlencode
 
 
-def default_link(url, text, title=''):
+def default_link(url, text, title=None):
     '''
     The default link generating function, for generating HTML links as
     strings. To generate links as `Genshi <http://genshi.edgewall.org/>`_
@@ -9,15 +9,14 @@ def default_link(url, text, title=''):
     alternate link-generating function which takes the same parameters.
 
     >>> default_link("http://www.google.com", "Google")
-    u'<a href="http://www.google.com">Google</a>'
+    '<a href="http://www.google.com">Google</a>'
 
     >>> default_link("http://www.google.com", "Google", "Google")
-    u'<a href="http://www.google.com" title="Google">Google</a>'
+    '<a href="http://www.google.com" title="Google">Google</a>'
 
     '''
-    if title is not '':
-        title = u' title="{0}"'.format(title)
-    return u"""<a href="{0}"{2}>{1}</a>""".format(url, text, title)
+    title = ' title="{0}"'.format(title) if title is not None else ''
+    return """<a href="{0}"{2}>{1}</a>""".format(url, text, title)
 
 
 class MapLink(object):
@@ -81,14 +80,14 @@ class MapLink(object):
         ...               'lat': ml.lat_str,
         ...               'lon': ml.long_str},
         ...              default_link)
-        u'<a href="http://www.example.com/?lat=-10.0&foo=bar&lon=20.0" title="ABC123 (-10.0, 20.0)">ABC123</a>'
+        '<a href="http://www.example.com/?foo=bar&lat=-10.0&lon=20.0" title="ABC123 (-10.0, 20.0)">ABC123</a>'
 
         '''
 
-        return link_generator(baseurl + urlencode(params.items()),
+        return link_generator(baseurl + urlencode(params),
                               self.original_string,
-                              u"{0} ({1})".format(self.original_string,
-                                                  self.coordinates(", ")))
+                              "{0} ({1})".format(self.original_string,
+                                                 self.coordinates(", ")))
 
     def __repr__(self):
         return "<MapLink %s>" % self.coordinates(", ")

@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 from decimal import Decimal, setcontext, ExtendedContext
 
-from geolucidate.parser import parser_re
 from geolucidate.links.google import google_maps_link
 from geolucidate.links.tools import MapLink
-
+from geolucidate.parser import parser_re
 
 setcontext(ExtendedContext)
 
@@ -51,7 +50,7 @@ def _cleanup(parts):
 
 
 def _convert(latdir, latdeg, latmin, latsec,
-            longdir, longdeg, longmin, longsec):
+             longdir, longdeg, longmin, longsec):
     """
     Convert normalized degrees, minutes, and seconds to decimal degrees.
     Quantize the converted value based on the input precision and
@@ -80,12 +79,12 @@ def _convert(latdir, latdeg, latmin, latsec,
     longsec = Decimal(longsec)
 
     if latsec > 59 or longsec > 59:
-        #Assume that 'seconds' greater than 59 are actually a decimal
-        #fraction of minutes
+        # Assume that 'seconds' greater than 59 are actually a decimal
+        # fraction of minutes
         latitude += (latmin +
                      (latsec / Decimal('100'))) / Decimal('60')
         longitude += (longmin +
-                  (longsec / Decimal('100'))) / Decimal('60')
+                      (longsec / Decimal('100'))) / Decimal('60')
     else:
         latitude += (latmin +
                      (latsec / Decimal('60'))) / Decimal('60')
@@ -114,14 +113,14 @@ def replace(string, sub_function=google_maps_link()):
     of the detected coordinates.
 
     >>> replace("58147N/07720W")
-    u'<a href="http://maps.google.com/maps?q=58.235278%2C-77.333333+%2858147N%2F07720W%29&ll=58.235278%2C-77.333333&t=h" title="58147N/07720W (58.235278, -77.333333)">58147N/07720W</a>'
+    '<a href="http://maps.google.com/maps?q=58.235278%2C-77.333333+%2858147N%2F07720W%29&ll=58.235278%2C-77.333333&t=h" title="58147N/07720W (58.235278, -77.333333)">58147N/07720W</a>'
 
     >>> replace("5814N/07720W", google_maps_link('satellite'))
-    u'<a href="http://maps.google.com/maps?q=58.233%2C-77.333+%285814N%2F07720W%29&ll=58.233%2C-77.333&t=k" title="5814N/07720W (58.233, -77.333)">5814N/07720W</a>'
+    '<a href="http://maps.google.com/maps?q=58.233%2C-77.333+%285814N%2F07720W%29&ll=58.233%2C-77.333&t=k" title="5814N/07720W (58.233, -77.333)">5814N/07720W</a>'
 
     >>> from geolucidate.links.bing import bing_maps_link
     >>> replace("58N/077W", bing_maps_link('map'))
-    u'<a href="http://bing.com/maps/default.aspx?style=r&cp=58%7E-77&sp=Point.58_-77_58N%2F077W&v=2" title="58N/077W (58, -77)">58N/077W</a>'
+    '<a href="http://bing.com/maps/default.aspx?style=r&cp=58~-77&sp=Point.58_-77_58N%2F077W&v=2" title="58N/077W (58, -77)">58N/077W</a>'
 
     """
 
@@ -135,7 +134,7 @@ def replace(string, sub_function=google_maps_link()):
 
 def get_replacements(string, sub_function=google_maps_link()):
     """
-    Return a dict whose keys are instances of :class:`re.MatchObject` and
+    Return a dict whose keys are instances of :class:`re.Match` and
     whose values are the corresponding replacements.  Use
     :func:`get_replacements` when the replacement cannot be performed
     through ordinary string substitution by :func:`re.sub`, as in
@@ -144,19 +143,18 @@ def get_replacements(string, sub_function=google_maps_link()):
 
     >>> get_replacements("4630 NORTH 5705 WEST 58147N/07720W")
     ... #doctest: +ELLIPSIS
-    {<_sre.SRE_Match object at ...>: u'<a href="..." title="...">4630 NORTH 5705 WEST</a>', <_sre.SRE_Match object at ...>: u'<a href="..." title="...">58147N/07720W</a>'}
+    {<re.Match object...>: '<a href="..." title="...">4630 NORTH 5705 WEST</a>', <re.Match object...>: '<a href="..." title="...">58147N/07720W</a>'}
 
-    >>> string = "4630 NORTH 5705 WEST 58147N/07720W"
-    >>> replacements = get_replacements(string)
+    >>> test_string = "4630 NORTH 5705 WEST 58147N/07720W"
+    >>> replacements = get_replacements(test_string)
     >>> offset = 0
-    >>> from UserString import MutableString
-    >>> out = MutableString(string)
-    >>> for (match, link) in replacements.iteritems():
+    >>> out = bytearray(test_string, encoding="ascii", errors="replace")
+    >>> for (match, link) in replacements.items():
     ...     start = match.start() + offset
     ...     end = match.end() + offset
-    ...     out[start:end] = link
+    ...     out[start:end] = bytearray(link, encoding="ascii", errors="replace")
     ...     offset += (len(link) - len(match.group()))
-    >>> out == replace(string)
+    >>> out.decode(encoding="ascii") == replace(test_string)
     True
     """
 
